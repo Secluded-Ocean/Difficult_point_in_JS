@@ -6,9 +6,9 @@
 
 #### [3.变量？上下文？作用域！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/3.%E4%BD%9C%E7%94%A8%E5%9F%9F)
 
-#### 4.闭包不自闭，自闭不闭包
+#### [4.闭包不自闭，自闭不闭包](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/4.%E9%97%AD%E5%8C%85)
 
-#### 5.变量，你要去哪？
+#### [5.变量，你要去哪？](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/3.%E4%BD%9C%E7%94%A8%E5%9F%9F)
 
 #### 6.这个this真能指！
 
