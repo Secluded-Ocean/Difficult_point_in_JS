@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <button id="btn1">测试箭头函数this_1</button>
+    <button id="btn2">测试箭头函数this_2</button>
+    <script type="text/javascript">
+      let btn1 = document.getElementById('btn1')
+      let obj = {
+        name: 'kobe',
+        age: 39,
+        objThis: this,
+        getName() {
+          btn1.onclick = () => {
+            console.log(this) //obj
+          }
+        },
+      }
+      obj.getName()
+      console.log(obj.objThis)
+    </script> -->
+
+    <button id="btn1">测试箭头函数this_1</button>
+    <button id="btn2">测试箭头函数this_2</button>
+    <script type="text/javascript">
+      let btn2 = document.getElementById('btn2')
+      let obj = {
+        name: 'kobe',
+        age: 39,
+        getName: () => {
+          btn2.onclick = () => {
+            console.log(this) //window
+          }
+        },
+      }
+      obj.getName()
+    </script>
+  </body>
+</html>
