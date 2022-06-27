@@ -4,9 +4,9 @@
 
 #### [2.七大继承分不清](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/2.%E7%BB%A7%E6%89%BF)
 
-### 3.变量？上下文？作用域！
+#### [3.变量？上下文？作用域！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/3.%E4%BD%9C%E7%94%A8%E5%9F%9F)
 
-### 4.闭包不自闭，自闭不闭包
+#### 4.闭包不自闭，自闭不闭包
 
 #### 5.变量，你要去哪？
 

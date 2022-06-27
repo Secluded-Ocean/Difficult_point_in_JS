@@ -365,3 +365,142 @@ var foo = 1;
 
 
 # 深入理解作用域链
+
+##### 查找变量的过程：
+
+* 从当前上下文的变量对象中查找；
+* 如果没有找到，就会从**父级(词法层面上的父级)执行上下文**的变量对象中查找，依次往上查找
+* 直到找到全局上下文的变量对象，也就是全局对象。
+* 这样由多个执行上下文的变量对象构成的链表就叫做作用域链。
+
+##### 模拟作用域链的查找和变化：
+
+* 函数的作用域在函数定义时被确定
+* 函数内部有个[[scope]]属性，当函数创建时，会保存所有父变量对象到[[scope]]中
+* [[scope]]就是所有父变量对象的层级链
+* 注意：[[scope]]并不代表完整的作用域链！
+
+作用域链创建过程：
+
+```javascript
+function foo() {
+    function bar() {
+        ...
+    }
+}
+```
+
+函数创建时，各自的[[scope]]为
+
+```javascript
+foo.[[scope]] = [
+  globalContext.VO	//foo的父变量对象VO就是全局变量
+];
+
+bar.[[scope]] = [
+    fooContext.AO,	//bar的父变量对象是foo上下文里的AO（活动对象）
+    globalContext.VO	//bar也包括foo的父变量对象，即全局变量
+];
+```
+
+函数激活时，进入函数上下文，创建了AO/VO后，就会将活动对象添加到作用域链的前端
+
+此时将执行上下文的作用域链命名为Scope：
+
+```javascript
+Scope = [AO].concat([[Scope]]);
+```
+
+至此，作用域链创建完毕
+
+
+##### 例子
+
+```javascript
+var scope = "全局作用域";
+function checkscope(){
+    var scope2 = '局部作用域';
+    return scope2;
+}
+checkscope();
+```
+
+执行过程：
+
+1.checkscope 函数被创建，保存作用域链到内部属性[[scope]]
+
+```javascript
+checkscope.[[scope]] = [
+    globalContext.VO	//checkscope的父变量对象就是全局变量对象globalContext.VO
+];
+```
+
+2.执行 checkscope 函数，创建 checkscope 函数执行上下文，checkscope 函数执行上下文被压入执行上下文栈
+
+```javascript
+ECStack = [
+    checkscopeContext,	//checkscope函数的上下文，创建后被压入执行上下文栈
+    globalContext	//全局上下文，初始化的时候首先就会向执行上下文栈压入一个全局执行上下文
+];
+```
+
+3.checkscope 函数并不立刻执行，开始做准备工作，第一步：复制函数[[scope]]属性创建作用域链
+
+```javascript
+checkscopeContext = {
+    Scope: checkscope.[[scope]],
+}
+```
+
+4.第二步：用 arguments 创建活动对象，随后初始化活动对象，加入形参、函数声明、变量声明
+
+```javascript
+checkscopeContext = {
+    AO: {
+        arguments: {
+            length: 0
+        },
+        scope2: undefined
+    }，
+    Scope: checkscope.[[scope]],
+}
+```
+
+5.第三步：将活动对象压入 checkscope 作用域链顶端
+
+```javascript
+checkscopeContext = {
+    AO: {
+        arguments: {
+            length: 0
+        },
+        scope2: undefined
+    },
+    Scope: [AO, [[Scope]]]
+}
+```
+
+6.准备工作做完，开始执行函数，随着函数的执行，修改 AO 的属性值
+
+```javascript
+checkscopeContext = {
+    AO: {
+        arguments: {
+            length: 0
+        },
+        scope2: 'local scope'
+    },
+    Scope: [AO, [[Scope]]]
+}
+```
+
+7.查找到 scope2 的值，返回后函数执行完毕，函数上下文从执行上下文栈中弹出
+
+```javascript
+ECStack = [
+    globalContext
+];
+```
+
+
+# 总结
