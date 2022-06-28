@@ -78,19 +78,111 @@ nicole instanceof programmer // true
 ### 实现原理
 
 ```javascript
-function new_instance_of(leftVaule, rightVaule) { 
-    let rightProto = rightVaule.prototype; // 取右表达式的 prototype 值
-    leftVaule = leftVaule.__proto__; // 取左表达式的__proto__值
-    while (true) {
-    	if (leftVaule === null) {
-            return false;
-        }
-        if (leftVaule === rightProto) {
-            return true;
-        } 
-        leftVaule = leftVaule.__proto__ 
+// [1,2,3] instanceof Array ---- true
+
+// L instanceof R
+// 变量R的原型 存在于 变量L的原型链上
+function instance_of(L, R) {
+  // 验证如果为基本数据类型，就直接返回false
+  const baseType = ['string', 'number', 'boolean', 'undefined', 'symbol']
+  if (baseType.includes(typeof L)) {
+    return false
+  }
+
+  let RP = R.prototype //取 R 的显示原型
+  L = L.__proto__ //取 L 的隐式原型
+  while (true) {
+    // 无线循环的写法（也可以使 for(;;) ）
+    if (L === null) {
+      //找到最顶层
+      return false
     }
+    if (L === RP) {
+      //严格相等
+      return true
+    }
+    L = L.__proto__ //没找到继续向上一层原型链查找
+  }
 }
 ```
 
-其实 `instanceof` 主要的实现原理就是只要右边变量的 `prototype` 在左边变量的原型链上即可。因此，`instanceof` 在查找的过程中会遍历左边变量的原型链，直到找到右边变量的 `prototype`，如果查找失败，则会返回 false，告诉我们左边变量并非是右边变量的实例。
+其实 `instanceof` 主要的实现原理就是只要**右边变量的 `prototype` 在左边变量的原型链上**即可。因此，`instanceof` 在查找的过程中会遍历左边变量的原型链，直到找到右边变量的 `prototype`，如果查找失败，则会返回 false，告诉我们左边变量并非是右边变量的实例。
+
+# 几个有趣的例子
+
+```javascript
+function Foo() {
+}
+
+Object instanceof Object // true
+Function instanceof Function // true
+Function instanceof Object // true
+Foo instanceof Foo // false
+Foo instanceof Object // true
+Foo instanceof Function // true
+```
+
+##### 1.Object instanceof Object
+
+Object 的 `prototype` 属性是 `Object.prototype`, 而由于 Object 本身是一个函数，由 Function 所创建，所以 `Object.__proto__` 的值是 `Function.prototype`，而 `Function.prototype` 的 `__proto__` 属性是 `Object.prototype`，所以我们可以判断出，`Object instanceof Object` 的结果是 true 。用代码简单的表示一下
+
+```javascript
+leftValue = Object.__proto__ = Function.prototype;
+rightValue = Object.prototype;
+// 第一次判断
+leftValue != rightValue
+leftValue = Function.prototype.__proto__ = Object.prototype
+// 第二次判断
+leftValue === rightValue
+// 返回 true
+```
+
+`Function instanceof Function` 和 `Function instanceof Object` 的运行过程与 `Object instanceof Object` 类似，故不再详说。
+
+##### 2.Foo instanceof Foo
+
+Foo 函数的 `prototype` 属性是 `Foo.prototype`，而 Foo 的 `__proto__` 属性是 `Function.prototype`，由图可知，Foo 的原型链上并没有 `Foo.prototype` ，因此 `Foo instanceof Foo` 也就返回 false 。
+
+```javascript
+leftValue = Foo, rightValue = Foo
+leftValue = Foo.__proto = Function.prototype
+rightValue = Foo.prototype
+// 第一次判断
+leftValue != rightValue
+leftValue = Function.prototype.__proto__ = Object.prototype
+// 第二次判断
+leftValue != rightValue
+leftValue = Object.prototype = null
+// 第三次判断
+leftValue === null
+// 返回 false
+```
+
+##### 3.Foo instanceof Object
+
+```javascript
+leftValue = Foo, rightValue = Object
+leftValue = Foo.__proto__ = Function.prototype
+rightValue = Object.prototype
+// 第一次判断
+leftValue != rightValue
+leftValue = Function.prototype.__proto__ = Object.prototype
+// 第二次判断
+leftValue === rightValue
+// 返回 true 
+```
+
+##### 4.Foo instanceof Function
+
+```javascript
+leftValue = Foo, rightValue = Function
+leftValue = Foo.__proto__ = Function.prototype
+rightValue = Function.prototype
+// 第一次判断
+leftValue === rightValue
+// 返回 true 
+```
+
+# 总结
+
+简单来说，我们使用 `typeof` 来判断基本数据类型是 ok 的，不过需要注意当用 `typeof` 来判断 `null` 类型时的问题，如果想要判断一个对象的具体类型可以考虑用 `instanceof`，但是 `instanceof` 也可能判断不准确，比如一个数组，他可以被 `instanceof` 判断为 Object。所以我们要想比较准确的判断对象实例的类型时，可以采取 `Object.prototype.toString.call` 方法。

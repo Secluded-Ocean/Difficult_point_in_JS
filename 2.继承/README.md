@@ -34,11 +34,8 @@ console.log(child1.getName()) // kevin
 **缺点：**
 
 1. 引用类型的属性被所有实例共享；
-
 2. 创建Child的实例时无法向Parent传参；
-
 3. 无法实现多继承
-
 
 ## 盗用构造函数继承
 
@@ -71,9 +68,7 @@ console.log(child2.names); // ["kevin", "daisy"]
 缺点：
 
 1. 方法都在构造函数中定义，每次创建实例都会创建一遍方法，无法实现函数复用；
-
 2. 子类不能访问父类原型上定义的方法。
-
 
 ## 组合继承
 
@@ -117,7 +112,6 @@ console.log(child2.colors); // ["red", "blue", "green"]
 1. 调用两次构造函数，
 2. 在这个例子中，如果我们打印 child1 对象，我们会发现 Child.prototype 和 child1 都有一个属性为 `colors`，属性值为 `['red', 'blue', 'green']`，这是调用了两次构造函数的结果。
 
-
 ## 原型式继承（即Object.create()）
 
 ```javascript
@@ -154,7 +148,6 @@ console.log(person2.friends); // ["daisy", "kelly", "taylor"]
 
 **注意**：修改 `person1.name`的值，`person2.name`的值并未发生改变，并不是因为 `person1`和 `person2`有独立的 name 值，而是因为 `person1.name = 'person1'`，给 `person1`添加了 name 值，并非修改了原型上的 name 值。
 
-
 ## 寄生式继承
 
 与原型式继承比较接近，在原型式继承的基础上增强对象，然后返回这个对象
@@ -172,7 +165,6 @@ function createObj (o) {
 优点：适合主要关注的是对象，而不在乎类型和构造函数的场景。
 
 缺点：跟借用构造函数模式一样，每次创建对象都会创建一遍方法。
-
 
 ## 寄生式组合继承
 
