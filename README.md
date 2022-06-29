@@ -12,7 +12,7 @@ https://github.com/ljianshu/Blog
 
 #### [4.闭包不自闭，自闭不闭包](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/4.%E9%97%AD%E5%8C%85)
 
-#### 5.arguments，为何不是数组！
+#### [5.arguments，为何不是数组！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/10.arguments)
 
 #### [6.这个this真能指！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/5.this)
 
@@ -22,13 +22,13 @@ https://github.com/ljianshu/Blog
 
 #### [9.bind、apply、call继续手写！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/8.call%26apply%26bind)
 
-#### 10.咖喱、颗粒、柯里化！
+#### [10.咖喱、颗粒、柯里化！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/11.%E7%A7%91%E9%87%8C%E5%8C%96)
 
-#### 11.捡破烂的小v8
+#### [11.捡破烂的小v8](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/12.v8%E7%9A%84%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6)
 
-#### 12.小数的故事
+#### [12.小数的故事](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/13.%E6%B5%AE%E7%82%B9%E6%95%B0)
 
-#### 13.手写又来啦！！！这次是new！！
+#### [13.手写又来啦！！！这次是new！！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/9.new%E6%93%8D%E4%BD%9C%E7%AC%A6#%E6%9C%80%E7%BB%88%E7%89%88%E4%BB%A3%E7%A0%81)
 
 #### 14.事件循环啊环啊环啊环
 
