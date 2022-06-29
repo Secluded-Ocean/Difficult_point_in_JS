@@ -20,7 +20,7 @@ bar.call(foo); // 1
 
 注意：call改变了this指向，且bar函数执行了。
 
-##### 模拟实现
+## 模拟实现
 
 假设call调用时，把foo对象改为：
 
@@ -245,7 +245,7 @@ Function.prototype.apply = function (context, arr) {
 
 # bind
 
-##### 功能
+## 功能
 
 > `bind()`方法创建一个新的函数，在 `bind()` 被调用时，这个新函数的 `this` 被指定为 `bind()` 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。(来自于 MDN )
 
@@ -266,7 +266,7 @@ var bindFoo = bar.bind(foo);
 bindFoo(); // 1
 ```
 
-##### 模拟实现
+## 模拟实现
 
 ```js
 // 第一版

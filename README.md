@@ -1,4 +1,8 @@
-学习JS时遇到的重难点，整理出来，要记得时常复习巩固！~
+学习浪里行舟和冴羽大佬的博客，巩固JS时遇到的重难点，要记得时常复习！~
+
+参考：https://github.com/mqyqingfeng/Blog
+
+https://github.com/ljianshu/Blog
 
 #### [1.原型链啊链啊链](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/1.%E5%8E%9F%E5%9E%8B%E9%93%BE)
 
@@ -8,7 +12,7 @@
 
 #### [4.闭包不自闭，自闭不闭包](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/4.%E9%97%AD%E5%8C%85)
 
-#### [5.变量，你要去哪？](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/3.%E4%BD%9C%E7%94%A8%E5%9F%9F)
+#### 5.arguments，为何不是数组！
 
 #### [6.这个this真能指！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/5.this)
 
