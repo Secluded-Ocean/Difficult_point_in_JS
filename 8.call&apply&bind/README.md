@@ -219,7 +219,6 @@ console.log(bar.call2(obj, 'kevin', 18));
 
 到此，我们完成了 call 的模拟实现！
 
-
 # apply模拟实现
 
 ```js
@@ -244,12 +243,11 @@ Function.prototype.apply = function (context, arr) {
 }
 ```
 
-
 # bind
 
 ##### 功能
 
-> bind() 方法会创建一个新函数。当这个新函数被调用时，bind() 的第一个参数将作为它运行时的 this，之后的一序列参数将会在传递的实参前传入作为它的参数。(来自于 MDN )
+> `bind()`方法创建一个新的函数，在 `bind()` 被调用时，这个新函数的 `this` 被指定为 `bind()` 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。(来自于 MDN )
 
 例子
 
@@ -269,3 +267,142 @@ bindFoo(); // 1
 ```
 
 ##### 模拟实现
+
+```js
+// 第一版
+Function.prototype.bind2 = function (context) {    // context是传入bind2的参数，相当于需要给新函数绑定的this
+    var functionNeedToBind = this;
+    return function () {
+        return functionNeedToBind.apply(context);  // bind的返回值一个原函数的拷贝，并拥有指定的 this 值和初始参数（第一版没有实现往函数里传参）。
+    }
+}
+```
+
+传入参数的模拟实现
+
+原生bind的例子：
+
+```js
+var foo = {
+    value: 1
+};
+
+function bar(name, age) {
+    console.log(this.value);
+    console.log(name);
+    console.log(age);
+
+}
+
+// bind函数可以实现分别传参：
+var bindFoo = bar.bind(foo, 'daisy');	// foo是给bar函数绑定的this对象，'daisy'是给bar函数传入的第一个参数（即形参name）
+bindFoo('18');		// 上一行的bind已经传入了一个参数'daisy'作为形参name，此处再传入'18'作为形参age
+// 1
+// daisy
+// 18
+```
+
+为了实现bind传参，改进第二版bind：
+
+```js
+// 第二版
+Function.prototype.bind2 = function (context) {	// context是传入bind2的参数，相当于需要给新函数绑定的this
+
+    var functionNeedToBind = this;
+    // 获取bind2函数从第二个参数到最后一个参数,arguments是类数组对象，没有slice方法，需要用call
+    var args = Array.prototype.slice.call(arguments, 1);
+
+    return function () {
+        // 这个时候的arguments是指bind返回的函数传入的参数
+        var bindArgs = Array.prototype.slice.call(arguments);
+        return functionNeedToBind.apply(context, args.concat(bindArgs));
+    }
+
+}
+```
+
+除此之外，bind还有一个特点：（最难的部分）
+
+> 一个绑定函数也能使用new操作符创建对象：这种行为就像把原函数当成构造器。提供的 this 值被忽略，同时调用时的参数被提供给模拟函数。
+
+也就是说**当 bind 返回的函数作为构造函数的时候，bind 时指定的 this 值会失效，但传入的参数依然生效**。举个例子：
+
+```js
+var value = 2;
+
+var foo = {
+    value: 1
+};
+
+function bar(name, age) {
+    this.habit = 'shopping';
+    console.log(this.value);
+    console.log(name);
+    console.log(age);
+}
+
+bar.prototype.friend = 'kevin';
+
+var bindFoo = bar.bind(foo, 'daisy');
+
+var obj = new bindFoo('18');
+// undefined           因为bind时指定的this失效了
+// daisy	       但bind时传入的参数依然生效
+// 18		       调用新函数时传入的第二个形参age
+console.log(obj.habit);
+console.log(obj.friend);
+// shopping
+// kevin
+```
+
+注意：尽管在全局和 foo 中都声明了 value 值，最后依然返回了 undefind，说明绑定的 this 失效了，了解 new 的模拟实现之后，就会知道这个时候的 this 已经指向了 obj。
+
+所以我们可以通过修改返回的函数的原型来实现，让我们写一下：
+
+```js
+// 第三版
+Function.prototype.bind2 = function (context) {
+    var functionNeedToBind = this;
+    var args = Array.prototype.slice.call(arguments, 1);
+
+    var fBound = function () {
+        var bindArgs = Array.prototype.slice.call(arguments);
+        // 当fBound作为构造函数时，this 指向实例，此时结果为 true，将绑定函数的 this 指向该实例，可以让实例获得来自绑定函数的值
+        // 当作为普通函数时，this 指向 window，此时结果为 false，将绑定函数的 this 指向 context
+        return functionNeedToBind.apply(this instanceof fBound ? this : context, args.concat(bindArgs));
+    }
+    // 修改返回函数的 prototype 为绑定函数的 prototype，实例就可以继承绑定函数的原型中的值
+    fBound.prototype = this.prototype;	  // 此处this指的是bind的调用者
+    return fBound;
+}
+```
+
+但是在这个写法中，我们直接将 fBound.prototype = this.prototype，我们直接修改 fBound.prototype 的时候，也会直接修改绑定函数的 prototype。这个时候，我们可以通过一个空函数来进行中转：
+
+## 最终版bind
+
+```js
+// 第四版
+Function.prototype.bind2 = function (context) {
+
+    // 加个判断，如果调用bind的不是函数，则抛出错误
+    if (typeof this !== "function") {
+      throw new Error("Function.prototype.bind - what is trying to be bound is not callable");
+    }
+
+    var functionNeedToBind = this;
+    var args = Array.prototype.slice.call(arguments, 1);
+
+    var fNOP = function () {};
+
+    var fBound = function () {
+        var bindArgs = Array.prototype.slice.call(arguments);
+        return functionNeedToBind.apply(this instanceof fNOP ? this : context, args.concat(bindArgs));
+    }
+
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+    // 上面这两步其实是在进行原型式继承
+    return fBound;
+}
+```

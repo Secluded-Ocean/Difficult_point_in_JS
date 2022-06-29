@@ -214,7 +214,9 @@ function prototype(child, parent) {
     prototype.constructor = child;		// 第2步：给第一步返回的对象重写constructor属性（增强对象）
     child.prototype = prototype;		// 第3步：将新创建的对象赋值给子类型的原型（赋值对象）
 }	// 这1、2步其实就是在使用寄生式继承来继承父类原型
-
+// 上面这个prototype函数可以封装为简化为两行代码：
+// child.prototype = Object.create(parent.prototype)
+// child.prototype.constructor = child
 
 // 当我们使用的时候：
 prototype(Child, Parent);

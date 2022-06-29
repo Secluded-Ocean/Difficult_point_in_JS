@@ -10,13 +10,13 @@
 
 #### [5.变量，你要去哪？](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/3.%E4%BD%9C%E7%94%A8%E5%9F%9F)
 
-#### 6.这个this真能指！
+#### [6.这个this真能指！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/5.this)
 
-#### 7.立即执行！拖延症克星！
+#### [7.立即执行！拖延症克星！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/6.%E7%AB%8B%E5%8D%B3%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0)
 
-#### 8.手写instanceof？不存在的
+#### [8.手写instanceof？不存在的](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/7.instanceof%E5%92%8Ctypeof)
 
-#### 9.bind、apply、call继续手写！
+#### [9.bind、apply、call继续手写！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/8.call%26apply%26bind)
 
 #### 10.咖喱、颗粒、柯里化！
 
