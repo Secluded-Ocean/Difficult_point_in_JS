@@ -50,7 +50,6 @@ fContext = {
 
 f 函数依然可以读取到 checkscopeContext.AO 的值，说明当 f 函数引用了 checkscopeContext.AO 中的值的时候，即使 checkscopeContext 被销毁了，但是 JavaScript 依然会让 checkscopeContext.AO 活在内存中，f 函数依然可以通过 f 函数的作用域链找到它，正是因为 JavaScript 做到了这一点，从而实现了闭包这个概念。
 
-
 ## 闭包的特性
 
 例题：
@@ -65,7 +64,7 @@ function outer(){
     }
 }
 outer();
-var a=300;
+var a = 300;
 inner();//一个函数在执行的时候，找闭包里面的变量，不会理会当前作用域。
 ```
 
@@ -73,16 +72,121 @@ inner();//一个函数在执行的时候，找闭包里面的变量，不会理�
 
 ```javascript
 //例题2
-function outer(x){
-  function inner(y){
-  console.log(x+y);
+function outer(x) {
+  function inner(y) {
+    console.log(x + y)
   }
-return inner;
+  return inner
 }
-var inn=outer(3);//数字3传入outer函数后，inner函数中x便会记住这个值
-inn(5);//当inner函数再传入5的时候，只会对y赋值，所以最后弹出8
+var inn = outer(3) //数字3传入outer函数后，inner函数中x便会记住这个值
+inn(5) //当inner函数再传入5的时候，只会对y赋值，所以最后弹出8
 ```
 
+例题2执行过程详细分析：
+
+1.outer函数被创建，保存作用域链到内部属性[[scope]]
+
+```js
+outer.[[scope]] = [
+    globalContext.VO	//outer的父变量对象就是全局变量对象globalContext.VO
+];
+```
+
+2.执行outer(3)，创建outer函数执行上下文并压入执行上下文栈
+
+```js
+ECStack = [
+    outerContext,	//outer函数的上下文，创建后被压入执行上下文栈
+    globalContext	//全局上下文，初始化的时候首先就会向执行上下文栈压入一个全局执行上下文
+];
+```
+
+3.outer函数并不立刻执行，开始做准备工作：
+
+第一步：复制函数[[scope]]属性创建作用域链
+
+```js
+outerContext = {
+    Scope: outer.[[scope]],
+} 
+```
+
+第二步：用 arguments 创建活动对象，随后初始化活动对象，加入形参、函数声明、变量声明
+
+```js
+outerContext = {
+    AO: {
+        arguments: {
+	    0 : 3,
+            length: 1
+        },
+	x : 3,
+        inner: reference to function inner(y) {console.log(x + y)}
+    },
+    Scope: outer.[[scope]],
+}
+```
+
+第三步：将活动对象压入outer作用域链顶端
+
+```js
+outerContext = {
+    AO: {
+        arguments: {
+	    0 : 3,
+            length: 1
+        },
+	x : 3,
+        inner: reference to function inner(y) {console.log(x + y)}
+    },
+    Scope: [AO, globalContext.VO]	// outer.[[scope]]之前为[globalContext.VO]，此时变为 [AO, globalContext.VO]
+}
+```
+
+4.准备工作做完，开始执行函数，随着函数的执行，inner函数被创建，保存作用域到内部属性[[scope]]
+
+```js
+inner.[[scope]] = [
+    outerContext.AO	//inn的父变量对象是outer的变量对象outerContext.AO
+    globalContext.VO
+];
+```
+
+6.查找到inner函数，返回后函数执行完毕，outer函数的执行上下文从执行上下文栈中弹出。
+
+```js
+ECStack = [
+    globalContext
+];
+```
+
+7.执行inn，创建inn函数执行上下文并压入执行上下文栈
+
+```js
+ECStack = [
+    innContext,		//inn函数的上下文，创建后被压入执行上下文栈
+    globalContext	//全局上下文，初始化的时候首先就会向执行上下文栈压入一个全局执行上下文
+];
+```
+
+8.inn执行上下文初始化，创建变量对象、作用域链、this等
+
+```js
+innContext = {
+    AO: {
+        arguments: {
+	    0 : 5,
+            length: 1
+        },
+	y : 5,
+    },
+    Scope: [AO, outerContext.AO, globalContext.VO]
+}
+```
+
+9.开始执行函数，顺着作用域链，在outerContext.AO中查找到x值，输出x + y
+
+9.inn函数执行完毕， 函数上下文从执行上下文栈中弹出
 
 ## 闭包的内存泄漏
 
@@ -91,12 +195,11 @@ inn(5);//当inner函数再传入5的时候，只会对y赋值，所以最后弹�
 比如：
 
 ```javascript
-function fn(){
-var num=100;
-return function(){
-  }
+function fn() {
+  var num = 100
+  return function () {}
 }
-var f=fn();//fn执行形成的这个私有的作用域就不能再销毁了
+var f = fn() //fn执行形成的这个私有的作用域就不能再销毁了
 ```
 
 也就是像上面这段代码，fn函数内部的私有作用域会被一直占用的，发生了内存泄漏。 所谓内存泄漏指任何对象在您不再拥有或需要它之后仍然存在。闭包不能滥用，否则会导致内存泄露，影响网页的性能。闭包使用完了后，要立即释放资源，将引用变量指向null。
@@ -119,7 +222,6 @@ var func2 = outer()
 func2() // 输出1  每次重新引用函数的时候，闭包是全新的。
 func2() // 输出2
 ```
-
 
 ## 闭包运用
 
@@ -159,7 +261,6 @@ func2() // 输出2
 })()
 ```
 
-
 例2：实现这样的一个需求: 点击某个按钮, 提示"点击的是第n个按钮"
 
 ```javascript
@@ -171,7 +272,6 @@ func2() // 输出2
       })(i)
     }
 ```
-
 
 例3：(与例2相似)
 

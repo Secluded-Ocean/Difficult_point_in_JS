@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      console.log('start')
+      //例题2
+      function outer(x) {
+        function inner(y) {
+          console.log(x + y)
+        }
+        return inner
+      }
+      var inn = outer(3) //数字3传入outer函数后，inner函数中x便会记住这个值
+      inn(5) //当inner函数再传入5的时候，只会对y赋值，所以最后弹出8
+    </script>
+  </body>
+</html>
