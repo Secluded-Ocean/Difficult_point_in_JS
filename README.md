@@ -32,6 +32,8 @@ https://github.com/ljianshu/Blog
 
 #### [14.事件循环啊环啊环啊环](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/14.%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF)
 
-#### 15.来吧，promise，来吧
+#### 15.数据好多！不能晕！
 
-#### 16.异步好兄弟，要数生成器
+#### xx.来吧，promise，来吧
+
+#### xx.异步好兄弟，要数生成器

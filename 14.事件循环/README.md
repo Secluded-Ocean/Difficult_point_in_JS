@@ -44,7 +44,6 @@ callback queue：事件队列
 宏任务：
 
 - setInterval()、setTimeout()
-
 - 异步Ajax请求
 - 文件操作
 - 其它
@@ -53,7 +52,6 @@ callback queue：事件队列
 
 - Promise.then、.catch和.finally（**注意Promise构造函数里的任务是同步任务！！！**）
 - process.nextTick
-
 - new MutationObserver()
 
 事件循环：
@@ -79,7 +77,7 @@ Promise.resolve().then(()=>{
 setTimeout(()=>{
   console.log('setTimeout1')
   Promise.resolve().then(()=>{
-    console.log('Promise2')    
+    console.log('Promise2')  
   })
 },0)  // 最后输出结果是Promise1，setTimeout1，Promise2，setTimeout2
 ```
@@ -127,11 +125,11 @@ node有一套自己的模型。node中事件循环的实现是依靠的libuv引�
 这些阶段大致的功能如下：
 
 - timers: 这个阶段执行定时器队列中的回调如 `setTimeout()` 和 `setInterval()`。
-- I/O callbacks: 这个阶段执行几乎所有的回调。但是不包括close事件，定时器和`setImmediate()`的回调。
+- I/O callbacks: 这个阶段执行几乎所有的回调。但是不包括close事件，定时器和 `setImmediate()`的回调。
 - idle, prepare: 这个阶段仅在内部使用，可以不必理会。
 - poll: 等待新的I/O事件，node在一些特殊情况下会阻塞在这里。
 - check: `setImmediate()`的回调会在这个阶段执行。
-- close callbacks: 例如`socket.on('close', ...)`这种close事件的回调。
+- close callbacks: 例如 `socket.on('close', ...)`这种close事件的回调。
 
 下面我们来按照代码第一次进入libuv引擎后的顺序来详细解说这些阶段：
 
@@ -143,11 +141,11 @@ node有一套自己的模型。node中事件循环的实现是依靠的libuv引�
 
 ### **check阶段**
 
-check阶段专门用来执行`setImmediate()`方法的回调，当poll阶段进入空闲状态，并且setImmediate queue中有callback时，事件循环进入这个阶段。
+check阶段专门用来执行 `setImmediate()`方法的回调，当poll阶段进入空闲状态，并且setImmediate queue中有callback时，事件循环进入这个阶段。
 
 ### **close阶段**
 
-当一个socket连接或者一个handle被突然关闭时（例如调用了`socket.destroy()`方法），close事件会被发送到这个阶段执行回调。否则事件会用`process.nextTick（）`方法发送出去。
+当一个socket连接或者一个handle被突然关闭时（例如调用了 `socket.destroy()`方法），close事件会被发送到这个阶段执行回调。否则事件会用 `process.nextTick（）`方法发送出去。
 
 ### **timer阶段**
 
@@ -165,7 +163,7 @@ check阶段专门用来执行`setImmediate()`方法的回调，当poll阶段进�
 
 ### **process.nextTick()**
 
-尽管没有提及，但是实际上node中存在着一个特殊的队列，即nextTick queue。这个队列中的回调执行虽然没有被表示为一个阶段，当时这些事件却会在每一个阶段执行完毕准备进入下一个阶段时优先执行。当事件循环准备进入下一个阶段之前，会先检查nextTick queue中是否有任务，如果有，那么会先清空这个队列。与执行poll queue中的任务不同的是，这个操作在队列清空前是不会停止的。这也就意味着，错误的使用`process.nextTick()`方法会导致node进入一个死循环。。直到内存泄漏。
+尽管没有提及，但是实际上node中存在着一个特殊的队列，即nextTick queue。这个队列中的回调执行虽然没有被表示为一个阶段，当时这些事件却会在每一个阶段执行完毕准备进入下一个阶段时优先执行。当事件循环准备进入下一个阶段之前，会先检查nextTick queue中是否有任务，如果有，那么会先清空这个队列。与执行poll queue中的任务不同的是，这个操作在队列清空前是不会停止的。这也就意味着，错误的使用 `process.nextTick()`方法会导致node进入一个死循环。。直到内存泄漏。
 
 那么合适使用这个方法比较合适呢？下面有一个例子：
 
@@ -175,7 +173,7 @@ const server = net.createServer(() => {}).listen(8080);
 server.on('listening', () => {});
 ```
 
-这个例子中当，当listen方法被调用时，除非端口被占用，否则会立刻绑定在对应的端口上。这意味着此时这个端口可以立刻触发listening事件并执行其回调。然而，这时候`on('listening)`还没有将callback设置好，自然没有callback可以执行。为了避免出现这种情况，node会在listen事件中使用`process.nextTick()`方法，确保事件在回调函数绑定后被触发。
+这个例子中当，当listen方法被调用时，除非端口被占用，否则会立刻绑定在对应的端口上。这意味着此时这个端口可以立刻触发listening事件并执行其回调。然而，这时候 `on('listening)`还没有将callback设置好，自然没有callback可以执行。为了避免出现这种情况，node会在listen事件中使用 `process.nextTick()`方法，确保事件在回调函数绑定后被触发。
 
 ### **setTimeout()和setImmediate()**
 
@@ -183,9 +181,9 @@ server.on('listening', () => {});
 
 `setTimeout()`方法是定义一个回调，并且希望这个回调在我们所指定的时间间隔后第一时间去执行。注意这个“第一时间执行”，这意味着，受到操作系统和当前执行任务的诸多影响，该回调并不会在我们预期的时间间隔后精准的执行。执行的时间存在一定的延迟和误差，这是不可避免的。node会在可以执行timer回调的第一时间去执行你所设定的任务。
 
-`setImmediate()`方法从意义上将是立刻执行的意思，但是实际上它却是在一个固定的阶段才会执行回调，即poll阶段之后。有趣的是，这个名字的意义和之前提到过的`process.nextTick()`方法才是最匹配的。node的开发者们也清楚这两个方法的命名上存在一定的混淆，他们表示不会把这两个方法的名字调换过来---因为有大量的node程序使用着这两个方法，调换命名所带来的好处与它的影响相比不值一提。
+`setImmediate()`方法从意义上将是立刻执行的意思，但是实际上它却是在一个固定的阶段才会执行回调，即poll阶段之后。有趣的是，这个名字的意义和之前提到过的 `process.nextTick()`方法才是最匹配的。node的开发者们也清楚这两个方法的命名上存在一定的混淆，他们表示不会把这两个方法的名字调换过来---因为有大量的node程序使用着这两个方法，调换命名所带来的好处与它的影响相比不值一提。
 
-`setTimeout()`和不设置时间间隔的`setImmediate()`表现上及其相似。猜猜下面这段代码的结果是什么？
+`setTimeout()`和不设置时间间隔的 `setImmediate()`表现上及其相似。猜猜下面这段代码的结果是什么？
 
 ```text
 setTimeout(() => {
@@ -220,12 +218,3 @@ timeout
 ```
 
 因为在I/O事件的回调中，setImmediate()方法的回调永远在timer的回调前执行。
-
-
-
-
-
-
-
-
-
