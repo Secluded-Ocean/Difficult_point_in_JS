@@ -153,7 +153,32 @@ parseInt(1100100,2)
 
 
 
+# 0.1+0.2 如何等于0.3
 
+在开发过程中遇到类似这样的问题：
 
+```javascript
+let n1 = 0.1, n2 = 0.2
+console.log(n1 + n2)  // 0.30000000000000004
+```
 
+这里得到的不是想要的结果，要想等于0.3，就要把它进行转化：
+
+```javascript
+(n1 + n2).toFixed(2) // 注意，toFixed为四舍五入
+```
+
+`toFixed(num)` 方法可把 Number 四舍五入为指定小数位数的数字。
+
+说了这么多，是时候该最开始的问题了，如何实现0.1+0.2=0.3呢？
+
+对于这个问题，一个直接的解决方法就是设置一个误差范围，通常称为“机器精度”。对JavaScript来说，这个值通常为2-52，在ES6中，提供了`Number.EPSILON`属性，而它的值就是2-52，只要判断`0.1+0.2-0.3`是否小于`Number.EPSILON`，如果小于，就可以判断为0.1+0.2 ===0.3
+
+```javascript
+function numberepsilon(arg1,arg2){                   
+  return Math.abs(arg1 - arg2) < Number.EPSILON;        
+}        
+
+console.log(numberepsilon(0.1 + 0.2, 0.3)); // true
+```
 
