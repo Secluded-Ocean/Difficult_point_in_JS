@@ -36,6 +36,137 @@ Array.prototype.isPrototypeOf(obj)
 
 ## 2.数组常用API（这个比较熟就不写了吧~）
 
+## 3.数组去重
+
+### 1.利用Set()+Array.from()
+
+```JS
+const result = Array.from(new Set(arr))
+```
+
+**注意：**以上去方式对NaN和undefined类型去重也是有效的，是因为NaN和undefined都可以被存储在Set中， NaN之间被视为相同的值（尽管在js中：NaN !== NaN）。
+
+### 2.利用两层循环+数组的splice方法
+
+```js
+function removeDuplicate(arr) {
+   let len = arr.length
+   for (let i = 0; i < len; i++) {
+      for (let j = i + 1; j < len; j++) {
+        if (arr[i] === arr[j]) {
+        arr.splice(j, 1)
+        len-- // 减少循环次数提高性能
+        j-- // 保证j的值自加后不变
+      }
+    }
+  }
+   return arr
+}
+ const result = removeDuplicate(arr)
+ console.log(result) // [ 1, 2, 'abc', true, false, undefined, NaN, NaN ]
+
+```
+
+### 3.利用数组的indexOf方法
+
+```js
+function removeDuplicate(arr) {
+   const newArr = []
+   arr.forEach(item => {
+     if (newArr.indexOf(item) === -1) {
+     newArr.push(item)
+    }
+ })
+ return newArr // 返回一个新数组
+}
+const result = removeDuplicate(arr)
+console.log(result) // [ 1, 2, 'abc', true, false, undefined, NaN, NaN ]
+
+```
+
+注意：新建一个空数组，遍历需要去重的数组，将数组元素存入新数组中，存放前判断数组中是否已经含有当前元素，没有则存入。此方法也无法对NaN去重。
+
+### 4.利用数组的includes方法
+
+```js
+ function removeDuplicate(arr) {
+    const newArr = []
+    arr.forEach(item => {
+       if (!newArr.includes(item)) {
+       newArr.push(item)
+      }
+   })
+  return newArr
+ }
+ const result = removeDuplicate(arr)
+ console.log(result) // [ 1, 2, 'abc', true, false, undefined, NaN ]
+
+```
+
+**注意：**为什么includes能够检测到数组中包含NaN，其涉及到includes底层的实现。如下图为includes实现的部分代码，在进行判断是否包含某元素时会调用sameValueZero方法进行比较，如果为NaN，则会使用isNaN()进行转化。
+
+```js
+const testArr = [1, 'a', NaN]
+console.log(testArr.includes(NaN)) // true
+```
+
+### 5.利用数组的filter()+indexOf()
+
+```js
+ function removeDuplicate(arr) {
+    return arr.filter((item, index) => {
+       return arr.indexOf(item) === index
+  })
+}
+const result = removeDuplicate(arr)
+console.log(result) // [ 1, 2, 'abc', true, false, undefined ]
+```
+
+**注意：**这里的输出结果中不包含NaN，是因为indexOf()无法对NaN进行判断，即arr.indexOf(item) === index返回结果为false。测试如下：
+
+```js
+const testArr = [1, 'a', NaN]
+console.log(testArr.indexOf(NaN)) // -1
+```
+
+### 6.利用Map()
+
+```JS
+function removeDuplicate(arr) {
+const map = new Map()
+const newArr = []
+arr.forEach(item => {
+  if (!map.has(item)) { // has()用于判断map是否包为item的属性值
+    map.set(item, true) // 使用set()将item设置到map中，并设置其属性值为true  
+    newArr.push(item)
+  }
+})
+return newArr
+}
+const result = removeDuplicate(arr)
+console.log(result) // [ 1, 2, 'abc', true, false, undefined, NaN ]
+```
+
+**注意：**使用Map()也可对NaN去重，原因是Map进行判断时认为NaN是与NaN相等的，剩下所有其它的值是根据 === 运算符的结果判断是否相等。
+
+### 7.利用对象
+
+```JS
+function removeDuplicate(arr) {
+   const newArr = []
+   const obj = {}
+   arr.forEach(item => {
+       if (!obj[item]) {
+           newArr.push(item)
+           obj[item] = true
+      }
+   })
+   return newArr
+ }
+ const result = removeDuplicate(arr)
+ console.log(result) // [ 1, 2, 'abc', true, false, undefined, NaN ]
+```
+
 
 
 # 对象常用方法
