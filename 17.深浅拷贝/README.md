@@ -148,10 +148,10 @@ function deepClone(obj, hash = new WeakMap()) {
     
   // 是对象的话就要进行深拷贝，首先进行哈希操作防止循环引用
   if (hash.get(obj)) return hash.get(obj);
-   hash.set(obj, cloneObj);
-    
+     
   let cloneObj = new obj.constructor();
   // 找到的是所属类原型上的constructor,而原型上的 constructor指向的是当前类本身
+  hash.set(obj, cloneObj);
   for (let key in obj) {
     if (obj.hasOwnProperty(key)) {	// for in遍历会包括继承的可枚举属性，需要排除这些属性
       cloneObj[key] = deepClone(obj[key], hash);
