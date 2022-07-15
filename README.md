@@ -42,9 +42,9 @@ https://github.com/ljianshu/Blog
 
 #### [19.不许说symbol没用](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/19.symbol)
 
-#### 20.map和set
+#### [20.map和set](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/20.Set%E5%92%8CMap)
 
-#### 21.模块化大全
+#### [21.模块化大全](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/21.%E6%A8%A1%E5%9D%97%E5%8C%96)
 
 #### 22.“请你手写一个promise”
 
