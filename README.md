@@ -32,8 +32,20 @@ https://github.com/ljianshu/Blog
 
 #### [14.事件循环啊环啊环啊环](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/14.%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF)
 
-#### 15.数据好多！不能晕！
+#### [15.数据好多！不能晕！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/15.%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B)
 
-#### xx.来吧，promise，来吧
+#### [16.还有对象和数组！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/16.%E5%AF%B9%E8%B1%A1%E5%92%8C%E6%95%B0%E7%BB%84)
 
-#### xx.异步好兄弟，要数生成器
+#### [17.深拷贝？还不是完全体深拷贝！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/17.%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D)
+
+#### [18.作用域！暂时性死区！](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/18.%E5%9D%97%E7%BA%A7%E4%BD%9C%E7%94%A8%E5%9F%9F)
+
+#### [19.不许说symbol没用](https://github.com/Secluded-Ocean/Difficult_point_in_JS/tree/main/19.symbol)
+
+#### 20.map和set
+
+#### 21.模块化大全
+
+#### 22.“请你手写一个promise”
+
+#### 23.异步好兄弟，要数生成器
